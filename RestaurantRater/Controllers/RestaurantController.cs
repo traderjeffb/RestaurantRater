@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,7 +10,7 @@ namespace RestaurantRater.Controllers
 {
     public class RestaurantController : Controller
     {
-        private REstaurantDbContext _db = new REstaurantDbContext();
+        private RestaurantDbContext _db = new RestaurantDbContext();
         // GET: Restaurant/Index
         public ActionResult Index()
         {
@@ -27,7 +28,7 @@ namespace RestaurantRater.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Restaurant restaurant)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _db.Restaurants.Add(restaurant);
                 _db.SaveChanges();
@@ -35,6 +36,33 @@ namespace RestaurantRater.Controllers
             }
 
             return View(restaurant);
+
+        }
+        //Get: Restuarant/Delete/{id}
+        public ActionResult Delete(int? id)
+        { 
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+             }
+            Restaurant restaurant = _db.Restaurants.Find(id);
+            if(restaurant==null)
+            {
+                return HttpNotFound();
+            }
+            return View(restaurant);
+            }
+
+        //Post: Restaurant/Delete/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            Restaurant restaurant = _db.Restaurants.Find(id);
+            _db.Restaurants.Remove(restaurant);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+
 
         }
     }

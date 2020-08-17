@@ -14,7 +14,7 @@ namespace RestaurantRater.Models
         public int Rating { get; set; }
     }
 
-    public class REstaurantDbContext : DbContext
+    public class RestaurantDbContext : DbContext
     {
         public DbSet<Restaurant> Restaurants { get; set; }
     }
